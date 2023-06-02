@@ -105,8 +105,8 @@ for artifact, profiles in profile_data.items():
                         data.at[index, 'Profiles'] = ', '.join(profile_list)
 
 data = data.reindex(columns=['description', 'Category', 'Subcategory', 'YAML Name','collector','Profiles','path','exclude_file_system','name_pattern',"command"] + [col for col in data.columns if col not in ['description', 'Category', 'Subcategory', 'YAML Name','collector','Profiles','path','exclude_file_system','name_pattern',"command"]])
-
-data.to_csv('UAC_artifacts_flatten.csv', index=False)
+data.replace(';', ',', regex=True, inplace=True)
+data.to_csv('UAC_artifacts_flatten.csv', index=False, sep = "|")
 
 print("\n----------\n\n[INFO] - Parsing succesful. Output : UAC_artifacts_flatten.csv\n"    )
 
