@@ -4,12 +4,11 @@ import pandas as pd
 import argparse
 import fnmatch
 
-def unknown_constructor(loader, tag_suffix, node): #If  profile contains "!", replace it by "exclude_" or script will crash
+def unknown_constructor(loader, tag_suffix, node):
     return "exclude_" + node.tag[1:]
 
-
 parser = argparse.ArgumentParser()
-parser.add_argument('root_path', help='The root path to begin searching for YAML files. Hint : submit UAC path')
+parser.add_argument('root_path', help='The root path to begin searching for YAML files.')
 args = parser.parse_args()
 
 print("\n[INFO] - Parsing started.\n----------\n\n")
@@ -19,7 +18,6 @@ root_path = args.root_path
 data = pd.DataFrame()
 profile_data = {}
 
-# Parse profiles
 profiles_path = os.path.join(root_path, 'profiles')
 for file in os.listdir(profiles_path):
     if file.endswith('.yaml'):
@@ -55,21 +53,20 @@ for root, dirs, files in os.walk(os.path.join(root_path, 'artifacts')):
 
                         for artifact, profiles in profile_data.items():
                             if fnmatch.fnmatch(os.path.join(category, subcategories, yaml_name), artifact):
+                                if yaml_df['Profiles'].values[0] != '':
+                                    yaml_df['Profiles'] += ', '
                                 yaml_df['Profiles'] += ', '.join(profiles)
 
                         data = pd.concat([data, yaml_df], ignore_index=True)
                 except yaml.YAMLError as e:
                     print(f"[ERROR] - Failed to parse {os.path.join(root, file)}")
-                    # Modify the file content in memory to remove the problematic characters
-                    file_content = open(os.path.join(root, file),'r').read() # Remove chars that break prevent python to read the yaml
+                    file_content = open(os.path.join(root, file),'r').read()
                     modified_content = file_content.replace("'", "")
                     modified_content = modified_content.replace('\t', '')
                     modified_content = modified_content.replace('%', '')
-                    # Use the modified content for further processing or parsing
                     try :
                         yaml_content = yaml.safe_load(modified_content)
                         if yaml_content is not None:
-                            # Continue with the parsing process using the modified content
                             print('....[INFO] - Yaml modification succeed. Yaml has been finally read')
                             yaml_df = pd.json_normalize(yaml_content, record_path=['artifacts'])
                             yaml_df['Category'] = category
@@ -79,6 +76,8 @@ for root, dirs, files in os.walk(os.path.join(root_path, 'artifacts')):
 
                             for artifact, profiles in profile_data.items():
                                 if fnmatch.fnmatch(os.path.join(category, subcategories, yaml_name), artifact):
+                                    if yaml_df['Profiles'].values[0] != '':
+                                        yaml_df['Profiles'] += ', '
                                     yaml_df['Profiles'] += ', '.join(profiles)
 
                             data = pd.concat([data, yaml_df], ignore_index=True)
@@ -88,25 +87,22 @@ for root, dirs, files in os.walk(os.path.join(root_path, 'artifacts')):
                         print('....[ERROR] - yaml modification didnt help. Error :',e)
 
 
-# Post-processing: exclude profiles
 for artifact, profiles in profile_data.items():
     if artifact.startswith('exclude'):  # This is an exclude rule
         artifact = artifact[8:]  # Remove exclude_
         for index, row in data.iterrows():
-            #print("hey ",os.path.join(row['Category'], row['Subcategory'], row['YAML Name']),artifact)
             if fnmatch.fnmatch(os.path.join(row['Category'], row['Subcategory'], row['YAML Name']), artifact):
                 for profile in profiles:
-                    # Remove this profile from the list of profiles for this row
-                    
                     profile_list = row['Profiles'].split(', ')
-                    
                     if profile in profile_list:
                         profile_list.remove(profile)
+                        profile_list = list(set(profile_list))
                         data.at[index, 'Profiles'] = ', '.join(profile_list)
 
 data = data.reindex(columns=['description', 'Category', 'Subcategory', 'YAML Name','collector','Profiles','path','exclude_file_system','name_pattern',"command"] + [col for col in data.columns if col not in ['description', 'Category', 'Subcategory', 'YAML Name','collector','Profiles','path','exclude_file_system','name_pattern',"command"]])
 data.replace(';', ',', regex=True, inplace=True)
-data.to_csv('UAC_artifacts_flatten.csv', index=False, sep = "|")
+# Convert strings to lists, remove duplicates from each list, then convert back to strings
+data['Profiles'] = data['Profiles'].apply(lambda x: ', '.join(list(set(x.split(', ')))))
+data.to_csv('UAC_artifacts_flatten.csv', index=False,sep="|")
 
 print("\n----------\n\n[INFO] - Parsing succesful. Output : UAC_artifacts_flatten.csv\n"    )
-
