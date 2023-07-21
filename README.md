@@ -2,8 +2,6 @@
 
 Tool made to have a clear view of the configurations of UAC : what is collected, how it is collected.
 
-![Alt text](/assets/Result.png)
-
 ## Usage
 The tool can work on both linux and windows.
 
