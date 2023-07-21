@@ -1,4 +1,4 @@
-description|Category|Subcategory|YAML Name|collector|Profiles|path|exclude_file_system|name_pattern|command|supported_os|max_depth|output_file|exclude_nologin_users|file_type|path_pattern|ignore_date_range|max_file_size|exclude_name_pattern|permissions|is_file_list|loop_command|output_directory|stderr_output_file|compress_output_file|exclude_path_pattern
+description|Category|Subcategory|YAML Name|collector|Profiles|path|exclude_file_system|name_pattern|command|supported_os|max_depth|output_file|exclude_nologin_users|file_type|path_pattern|ignore_date_range|max_file_size|exclude_name_pattern|permissions|is_file_list|foreach|output_directory|stderr_output_file|compress_output_file|exclude_path_pattern
 Collect file stat information to create a bodyfile.|bodyfile||bodyfile.yaml|stat|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|bodyfile.txt|||||||||||||
 Locally checks for signs of a rootkit.|chkrootkit||chkrootkit.yaml|command|full.yaml, ir_triage.yaml||||"chkrootkit -n -r ""%mount_point%"""|['freebsd', 'linux', 'macos', 'netbsd', 'openbsd', 'solaris']||chkrootkit_-n_-r.txt|||||||||||||
 Locally (extended) checks for signs of a rootkit.|chkrootkit||chkrootkit.yaml|command|full.yaml, ir_triage.yaml||||"chkrootkit -n -x -r ""%mount_point%"""|['freebsd', 'linux', 'macos', 'netbsd', 'openbsd', 'solaris']||chkrootkit_-n_-r_-x.txt|||||||||||||
@@ -289,7 +289,7 @@ List all containers.|live_response|containers|docker.yaml|command|full.yaml, ir_
 List all images.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker image ls --all|['linux']||docker_image_ls_--all.txt|||||||||||||
 Display system-wide information.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker info|['linux']||docker_info.txt|||||||||||||
 Show the Docker version information.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker version|['linux']||docker_version.txt|||||||||||||
-Display a live stream of one or more container’s resource usage statistics|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker stats --all --no-stream --no-trunc|['linux']||docker_stats_--all_--no-stream_--no-trunc.txt|||||||||||||
+Display a live stream of one or more container's resource usage statistics.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker stats --all --no-stream --no-trunc|['linux']||docker_stats_--all_--no-stream_--no-trunc.txt|||||||||||||
 Fetch the logs of all containers.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker container logs %line%|['linux']||docker_container_logs_%line%.txt|||||||||"docker container ps --all | sed 1d | awk '{print $1}'"||||
 Return low-level information on Docker objects.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker inspect %line%|['linux']||docker_inspect_%line%.txt|||||||||"docker container ps --all | sed 1d | awk '{print $1}'"||||
 Display detailed information on one or more networks.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker network inspect %line%|['linux']||docker_network_inspect_%line%.txt|||||||||"docker container ps --all | sed 1d | awk '{print $1}'"||||
@@ -299,11 +299,27 @@ Displays the raw CNI network configuration for all networks.|live_response|conta
 List all volumes.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker volume ls|['linux']||docker_volume_ls.txt|||||||||||||
 Display detailed information about all volumes.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker volume inspect %line%|['linux']||docker_volume_inspect_%line%.txt|||||||||"docker volume ls | sed 1d | awk '{print $2}'"||||
 Display changes in the container filesystem since its creation.|live_response|containers|docker.yaml|command|full.yaml, ir_triage.yaml||||docker diff %line%|['linux']||docker_diff_%line%.txt|||||||||"docker container ps --all | sed 1d | awk '{print $1}'"||||
+List all containers and virtual machines.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc list --all-projects --format compact|['linux']||lxc_list.txt|||||||||||||
+List all images.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc image list --format compact|['linux']||lxc_image_list.txt|||||||||||||
+Display system-wide information.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc info|['linux']||lxc_info.txt|||||||||||||
+List profiles.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc profile list --format compact|['linux']||lxc_profile_list.txt|||||||||||||
+List available storage pools.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc storage list --format compact|['linux']||lxc_storage_list.txt|||||||||||||
+List warnings.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc warning list --format compact|['linux']||lxc_warning_list.txt|||||||||||||
+Show the version information.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc version|['linux']||lxc_version.txt|||||||||||||
+Show detailed information about all containers and virtual machines including the instance's last 100 log lines.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc info %line% --show-log|['linux']||lxc_info_%line%_--show-log.txt|||||||||"lxc list --format compact | sed 1d | awk '{print $1}'"||||
+Show detailed configuration about all containers and virtual machines.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc config show %line%|['linux']||lxc_config_show_%line%.txt|||||||||"lxc list --format compact | sed 1d | awk '{print $1}'"||||
+Show detailed information on one or more networks.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc network info %line%|['linux']||lxc_network_info_%line%.txt|||||||||"lxc list --format compact | sed 1d | awk '{print $1}'"||||
+Show detailed information about all profiles.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc profile show %line%|['linux']||lxc_profile_show_%line%.txt|||||||||"lxc profile list --format compact | sed 1d | awk '{print $1}'"||||
+Show detailed information about all storage pools.|live_response|containers|lxc.yaml|command|full.yaml, ir_triage.yaml||||lxc storage show %line%|['linux']||lxc_storage_show_%line%.txt|||||||||"lxc storage list --format compact | sed 1d | awk '{print $1}'"||||
+List all Proxmox VE active and inactive LXC containers.|live_response|containers|pct.yaml|command|full.yaml, ir_triage.yaml||||pct list|['linux']||pct_list.txt|||||||||||||
+Get the current configuration of LXC containers.|live_response|containers|pct.yaml|command|full.yaml, ir_triage.yaml||||pct config %line% --current|['linux']||pct_config_%line%_--current.txt|||||||||"pct list | sed -e '1d' | awk '{print $1}'"||||
+List all snapshots.|live_response|containers|pct.yaml|command|full.yaml, ir_triage.yaml||||pct listsnapshot %line%|['linux']||pct_listsnapshot_%line%.txt|||||||||"pct list | sed -e '1d' | awk '{print $1}'"||||
+Print the list of assigned CPU sets.|live_response|containers|pct.yaml|command|full.yaml, ir_triage.yaml||||pct cpusets|['linux']||pct_cpusets.txt|||||||||||||
 List all containers.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman container ls --all --size|['linux']||podman_container_ls_--all_--size.txt|||||||||||||
 List all images.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman image ls --all|['linux']||podman_image_ls_--all.txt|||||||||||||
 Display system-wide information.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman info|['linux']||podman_info.txt|||||||||||||
 Show the Docker version information.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman version|['linux']||podman_version.txt|||||||||||||
-Display a live stream of one or more container’s resource usage statistics.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman stats --all --no-stream|['linux']||podman_stats_--all_--no-stream.txt|||||||||||||
+Display a live stream of one or more containerâ€™s resource usage statistics.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman stats --all --no-stream|['linux']||podman_stats_--all_--no-stream.txt|||||||||||||
 Fetch the logs of all containers.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman container logs %line%|['linux']||podman_container_logs_%line%.txt|||||||||"podman container ps --all | sed 1d | awk '{print $1}'"||||
 Return low-level information on Docker objects.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman inspect %line%|['linux']||podman_inspect_%line%.txt|||||||||"podman container ps --all | sed 1d | awk '{print $1}'"||||
 Display detailed information on one or more networks.|live_response|containers|podman.yaml|command|full.yaml, ir_triage.yaml||||podman network inspect %line%|['linux']||podman_network_inspect_%line%.txt|||||||||"podman container ps --all | sed 1d | awk '{print $1}'"||||
@@ -335,8 +351,9 @@ Display information about the CPU architecture.|live_response|hardware|lscpu.yam
 Display devices in the system and their characteristics.|live_response|hardware|lsdev.yaml|command|full.yaml, ir_triage.yaml||||lsdev -P|['aix']||lsdev_-P.txt|||||||||||||
 Display hardware information.|live_response|hardware|lshw.yaml|command|full.yaml, ir_triage.yaml||||lshw|['linux']||lshw.txt|||||||||||||
 List all PCI devices.|live_response|hardware|lspci.yaml|command|full.yaml, ir_triage.yaml||||lspci|['android', 'linux']||lspci.txt|||||||||||||
-List all PCI devices.|live_response|hardware|lspci.yaml|command|full.yaml, ir_triage.yaml||||lspci -vv|['linux']||lspci_-vv.txt|||||||||||||
 List all PCI devices including the kernel driver.|live_response|hardware|lspci.yaml|command|full.yaml, ir_triage.yaml||||lspci -e -k|['android']||lspci_-e_-k.txt|||||||||||||
+List all PCI devices.|live_response|hardware|lspci.yaml|command|full.yaml, ir_triage.yaml||||lspci -vv|['linux']||lspci_-vv.txt|||||||||||||
+List all PCI devices.|live_response|hardware|lspci.yaml|command|full.yaml, ir_triage.yaml||||lspci -nn -k|['linux']||lspci_-nn_-k.txt|||||||||||||
 Display SCSI devices (or hosts) and their attributes.|live_response|hardware|lsscsi.yaml|command|full.yaml, ir_triage.yaml||||lsscsi|['linux']||lsscsi.txt|||||||||||||
 Display information about USB devices.|live_response|hardware|lsusb.yaml|command|full.yaml, ir_triage.yaml||||lsusb|['android', 'linux']||lsusb.txt|||||||||||||
 Display information about USB devices.|live_response|hardware|lsusb.yaml|command|full.yaml, ir_triage.yaml||||lsusb -vv|['linux']||lsusb_-vv.txt|||||||||||||
@@ -466,6 +483,8 @@ Collect the memory sections and strings from (deleted) processes.|live_response|
 Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||"ls -l /proc/%line%/fd/[0-9]* | grep -E ""\(deleted\)"" | grep -v -E ""> /dev/|> /proc/"" | awk -F""/proc/%line%/fd/| ->"" '{print ""%line%/fd/""$2}'"|['linux']||.deleted_file_descriptors.txt|||||||||"ls -l /proc/[0-9]*/exe | grep -E ""\(deleted\)"" | awk -F""/proc/|/exe"" '{print $2}'"||||
 Collect the list of deleted files located in /dev/shm of (malicious) processes if they are shown up as being (deleted).|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||"ls -l /proc/%line%/fd/[0-9]* | grep -E ""\(deleted\)"" | grep -E ""> /dev/shm"" | awk -F""/proc/%line%/fd/| ->"" '{print ""%line%/fd/""$2}'"|['linux']||.deleted_file_descriptors.txt|||||||||"ls -l /proc/[0-9]*/exe | grep -E ""\(deleted\)"" | awk -F""/proc/|/exe"" '{print $2}'"||||
 Collect open files of (malicious) processes if they are shown up as being (deleted).|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||dd if=/proc/%line% of=%output_file% bs=1024 count=50000|['linux']||recovered_file.dd|||||||||"cat ""%destination_directory%/.deleted_file_descriptors.txt"""|proc/%line%|||
+Collect the list of files being hidden in a memfd socket.|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||"ls -l /proc/%line%/fd/[0-9]* | grep ""memfd"" | grep -E ""\(deleted\)"" | awk -F""/proc/%line%/fd/| ->"" '{print ""%line%/fd/""$2}'"|['linux']||.files_hidden_in_memfd_socket.txt|||||||||"ls -l /proc/[0-9]*/exe | awk -F""/proc/|/exe"" '{print $2}'"||||
+Collect open files of (malicious) processes if they are being hidden in a memfd socket.|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||dd if=/proc/%line% of=%output_file% bs=1024 count=50000|['linux']||recovered_file.dd|||||||||"cat ""%destination_directory%/.files_hidden_in_memfd_socket.txt"""|proc/%line%|||
 List of open files of (malicious) processes.|live_response|process|deleted.yaml|command|full.yaml, ir_triage.yaml||||"ls -l /proc/%line%/fd/[0-9]* | grep -v -E ""\(deleted\)"" | awk -F'-> ' '{print $2}' | sed -e ""s:^'::"" -e ""s:'$::"" -e ':^""::' -e ':""$::'"|['linux']||.list_open_file_descriptors.txt|||||||||"ls -l /proc/[0-9]*/exe | grep -E ""\(deleted\)"" | awk -F""/proc/|/exe"" '{print $2}'"||||
 Find open files of (malicious) processes.|live_response|process|deleted.yaml|find|full.yaml, ir_triage.yaml|.list_open_file_descriptors.txt||||['linux']||.open_file_descriptors.txt||f||||||True|||||
 Collect open files of (malicious) processes.|live_response|process|deleted.yaml|file|full.yaml, ir_triage.yaml|.open_file_descriptors.txt||||['linux']||||||||||True|||||
@@ -532,6 +551,7 @@ Extract strings from running processes.|live_response|process|strings_running_pr
 Display current running processes.|live_response|process|top.yaml|command|full.yaml, ir_triage.yaml||||top -b|['freebsd', 'netbsd', 'netscaler', 'openbsd', 'solaris']||top_-b.txt|||||||||||||
 Display current running processes.|live_response|process|top.yaml|command|full.yaml, ir_triage.yaml||||top -b -n1|['android', 'linux']||top_-b_-n1.txt|||||||||||||
 Display current running processes.|live_response|process|top.yaml|command|full.yaml, ir_triage.yaml||||top -l1|['macos']||top_l1.txt|||||||||||||
+Report ZFS ARC and L2ARC statistics.|live_response|storage|arcstat.yaml|command|full.yaml, ir_triage.yaml||||arcstat|['freebsd', 'linux', 'netbsd', 'openbsd', 'solaris']||arcstat.txt|||||||||||||
 Locate/print block device attributes.|live_response|storage|blkid.yaml|command|full.yaml, ir_triage.yaml||||blkid|['linux']||blkid.txt|||||||||||||
 Report file system disk space usage.|live_response|storage|df.yaml|command|full.yaml, ir_triage.yaml||||df|['all']||df.txt|||||||||||||
 Report file system disk space usage.|live_response|storage|df.yaml|command|full.yaml, ir_triage.yaml||||df -h|['android', 'freebsd', 'linux', 'macos', 'netbsd', 'netscaler', 'openbsd', 'solaris']||df_-h.txt|||||||||||||
@@ -541,14 +561,19 @@ List the NAS volumes currently known to the ESX host.|live_response|storage|esxc
 List the NFS v4.1 volumes currently known to the ESX host.|live_response|storage|esxcli.yaml|command|full.yaml, ir_triage.yaml||||esxcli storage nfs41 list|['esxi']||esxcli_storage_nfs41_list.txt|||||||||||||
 List the volumes available to the host. This includes VMFS, NAS, VFAT and UFS partitions.|live_response|storage|esxcli.yaml|command|full.yaml, ir_triage.yaml||||esxcli storage filesystem list|['esxi']||esxcli_storage_filesystem_list.txt|||||||||||||
 List the partition tables for devices mentioned in /proc/partitions.|live_response|storage|fdisk.yaml|command|full.yaml, ir_triage.yaml||||fdisk -l|['linux']||fdisk_-l.txt|||||||||||||
+Display all mounted filesystems in the tree-like format.|live_response|storage|findmnt.yaml|command|full.yaml, ir_triage.yaml||||findmnt --ascii|['linux']||findmnt.txt|||||||||||||
 List available disks.|live_response|storage|format.yaml|command|full.yaml, ir_triage.yaml||||"echo | format"|['solaris']||format.txt|||||||||||||
 Report system calls and page faults related to filesystem activity in real-time.|live_response|storage|fs_usage.yaml|command|full.yaml, ir_triage.yaml||||fs_usage -e -w -t 60|['macos']||fs_usage_-e_-w_-t_60.txt|||||||||||||
 Print the list of all providers from the DISK class.|live_response|storage|geom.yaml|command|full.yaml, ir_triage.yaml||||geom disk list|['freebsd']||geom_disk_list.txt|||||||||||||
 Display geoms hierarchy asa tree.|live_response|storage|geom.yaml|command|full.yaml, ir_triage.yaml||||geom -t|['freebsd']||geom_-t.txt|||||||||||||
 Print statistics about GEOM disks.|live_response|storage|gstat.yaml|command|full.yaml, ir_triage.yaml||||gstat -b|['freebsd']||gstat_-b.txt|||||||||||||
-Reports I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat|['freebsd', 'solaris']||iostat.txt|||||||||||||
-Reports I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -l|['aix']||iostat_-l.txt|||||||||||||
-Reports I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -E -n|['solaris']||iostat_-E_-n.txt|||||||||||||
+Report device I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -d -l|['aix']||iostat_-d_-l.txt|||||||||||||
+Display device I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -d -c 3|['freebsd', 'openbsd']||iostat_-d_-c_3.txt|||||||||||||
+Display device I/O statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -d 1 3|['solaris']||iostat_-d_1_3.txt|||||||||||||
+Display device I/O statistics but displaying names in descriptive format.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -d -n 1 3|['solaris']||iostat_-d_-n_1_3.txt|||||||||||||
+Display all device error statistics.|live_response|storage|iostat.yaml|command|full.yaml, ir_triage.yaml||||iostat -E|['solaris']||iostat_-E.txt|||||||||||||
+List iSCSI devices.|live_response|storage|iscsiadm.yaml|command|full.yaml, ir_triage.yaml||||iscsiadm -m node|['linux']||iscsiadm_-m_node.txt|||||||||||||
+Display session statistics.|live_response|storage|iscsiadm.yaml|command|full.yaml, ir_triage.yaml||||iscsiadm -s|['linux']||iscsiadm_-s.txt|||||||||||||
 Display logical partition (LPAR) related information and statistics.|live_response|storage|lparstat.yaml|command|full.yaml, ir_triage.yaml||||lparstat -i|['aix']||lparstat_-i.txt|||||||||||||
 List block devices.|live_response|storage|lsblk.yaml|command|full.yaml, ir_triage.yaml||||lsblk|['linux']||lsblk.txt|||||||||||||
 List block devices.|live_response|storage|lsblk.yaml|command|full.yaml, ir_triage.yaml||||lsblk -l|['linux']||lsblk_-l.txt|||||||||||||
@@ -557,17 +582,19 @@ Displays the characteristics of file systems.|live_response|storage|lsfs.yaml|co
 Displays information about a physical volume within a volume group.|live_response|storage|lspv.yaml|command|full.yaml, ir_triage.yaml||||lspv|['aix']||lspv.txt|||||||||||||
 Displays information about volume groups.|live_response|storage|lsvg.yaml|command|full.yaml, ir_triage.yaml||||lsvg|['aix']||lsvg.txt|||||||||||||
 Displays information about volume groups.|live_response|storage|lsvg.yaml|command|full.yaml, ir_triage.yaml||||"lsvg -o | lsvg -il"|['aix']||lsvg_-o_lsvg_-il.txt|||||||||||||
+Display the mapping of logical volumes with physical disks.|live_response|storage|ls_dev_disk.yaml|command|full.yaml, ir_triage.yaml||||ls -l /dev/disk/by-*|['linux']||ls_-l_dev_disk.txt|||||||||||||
 Display the mapping of logical volumes with physical disks.|live_response|storage|ls_vmfs_devices.yaml|command|full.yaml, ir_triage.yaml||||ls -l /vmfs/devices/disks|['esxi']||ls_-l_vmfs_devices_disks.txt|||||||||||||
 Display information about logical volumes.|live_response|storage|lvdisplay.yaml|command|full.yaml, ir_triage.yaml||||lvdisplay|['linux']||lvdisplay.txt|||||||||||||
 Display information about logical volumes.|live_response|storage|lvs.yaml|command|full.yaml, ir_triage.yaml||||lvs|['linux']||lvs.txt|||||||||||||
 Lists all mounted filesystems.|live_response|storage|mount.yaml|command|full.yaml, ir_triage.yaml||||mount|['android', 'aix', 'freebsd', 'linux', 'openbsd', 'netbsd', 'netscaler', 'openbsd', 'solaris']||mount.txt|||||||||||||
 List partition tables for all available drives.|live_response|storage|pdisk.yaml|command|full.yaml, ir_triage.yaml||||pdisk -l|['macos']||pdisk_-l.txt|||||||||||||
 Display various attributes of physical volumes.|live_response|storage|pvdisplay.yaml|command|full.yaml, ir_triage.yaml||||pvdisplay|['linux']||pvdisplay.txt|||||||||||||
+Get status for all Proxmox VE datastores.|live_response|storage|pvesm.yaml|command|full.yaml, ir_triage.yaml||||pvesm status|['linux']||pvesm_status.txt|||||||||||||
 Display information about physical volumes.|live_response|storage|pvs.yaml|command|full.yaml, ir_triage.yaml||||pvs|['linux']||pvs.txt|||||||||||||
 Display volume group information.|live_response|storage|vgdisplay.yaml|command|full.yaml, ir_triage.yaml||||vgdisplay|['linux']||vgdisplay.txt|||||||||||||
 Display information about volume groups.|live_response|storage|vgs.yaml|command|full.yaml, ir_triage.yaml||||vgs|['linux']||vgs.txt|||||||||||||
 Lists the property information for the given datasets in tabular form.|live_response|storage|zfs.yaml|command|full.yaml, ir_triage.yaml||||zfs list -o name,avail,used,usedsnap,usedds,usedrefreserv,usedchild,sharenfs,mountpoint|['aix', 'freebsd', 'linux', 'macos', 'netbsd', 'netscaler', 'openbsd', 'solaris']||zfs_list.txt|||||||||||||
-Lists all pools along with a health status and space usage.|live_response|storage|zpool.yaml|command|full.yaml, ir_triage.yaml||||zpool list|['aix', 'freebsd', 'linux', 'macos', 'netbsd', 'netscaler', 'openbsd', 'solaris']||zpool_list.txt|||||||||||||
+Lists all pools along with a health status and space usage.|live_response|storage|zpool.yaml|command|full.yaml, ir_triage.yaml||||zpool list -v|['aix', 'freebsd', 'linux', 'macos', 'netbsd', 'netscaler', 'openbsd', 'solaris']||zpool_list_-v.txt|||||||||||||
 Displays the detailed health status for all available pools.|live_response|storage|zpool.yaml|command|full.yaml, ir_triage.yaml||||zpool status -v|['aix', 'freebsd', 'linux', 'macos', 'netbsd', 'netscaler', 'openbsd', 'solaris']||zpool_status_-v.txt|||||||||||||
 Display kernel's audit rules.|live_response|system|auditctl.yaml|command|full.yaml, ir_triage.yaml||||auditctl -l|['linux']||auditctl_-l.txt|||||||||||||
 Display the kernel's audit subsystem status.|live_response|system|auditctl.yaml|command|full.yaml, ir_triage.yaml||||auditctl -s|['linux']||auditctl_-s.txt|||||||||||||
@@ -611,10 +638,13 @@ Display amount of free and used memory in the system.|live_response|system|free.
 Display the list of kernel extensions currently loaded onto the system and displays the address, size, and path name for each kernel extension in the list.|live_response|system|genkex.yaml|command|full.yaml, ir_triage.yaml||||genkex|['aix']||genkex.txt|||||||||||||
 Display the current mode of SELinux.|live_response|system|getenforce.yaml|command|full.yaml, ir_triage.yaml||||getenforce|['android', 'linux']||getenforce.txt|||||||||||||
 Display all properties and values from Android propery service.|live_response|system|getprop.yaml|command|full.yaml, ir_triage.yaml||||getprop|['android']||getprop.txt|||||||||||||
-List all hidden directories outside of user home directory.|live_response|system|hidden_directories.yaml|find|full.yaml, ir_triage.yaml|/||['.*']||['all']||hidden_directories.txt||d|||||||||||['/root', '/home', '/export/home', '/Users']
-List all hidden files outside of user home directory.|live_response|system|hidden_files.yaml|find|full.yaml, ir_triage.yaml|/||['.*']||['all']||hidden_files.txt||f|||||||||||['/root', '/home', '/export/home', '/Users']
+Display Proxmox VE HA manager status.|live_response|system|ha-manager.yaml|command|full.yaml, ir_triage.yaml||||ha-manager status|['linux']||ha-manager_status.txt|||||||||||||
+List all hidden directories outside of user home directory.|live_response|system|hidden_directories.yaml|find|full.yaml, ir_triage.yaml|/||['.*']||['all']|6.0|hidden_directories.txt||d|||||||||||['/root', '/home', '/export/home', '/Users']
+List all hidden files outside of user home directory.|live_response|system|hidden_files.yaml|find|full.yaml, ir_triage.yaml|/||['.*']||['all']|6.0|hidden_files.txt||f|||||||||||['/root', '/home', '/export/home', '/Users']
 Display the Hardware Clock time.|live_response|system|hwclock.yaml|command|full.yaml, ir_triage.yaml||||hwclock|['android', 'linux']||hwclock.txt|||||||||||||
 Display the name of the instruction set(s) used by the operating system kernel components such as device drivers and STREAMS modules.|live_response|system|isainfo.yaml|command|full.yaml, ir_triage.yaml||||isainfo -v -k|['solaris']||isainfo_-v_-k.txt|||||||||||||
+Display the kernel tainted state.|live_response|system|kernel_tainted_state.yaml|command|full.yaml, ir_triage.yaml||||cat /proc/sys/kernel/tainted|['linux']||cat_proc_sys_kernel_tainted.txt|||||||||||||
+Display what modules are marked at tainting the kernel.|live_response|system|kernel_tainted_state.yaml|command|full.yaml, ir_triage.yaml||||"grep ""(.*)"" /proc/modules"|['linux']||modules_tainting_the_kernel.txt|||||||||||||
 Display status of loaded kernel extensions (kexts).|live_response|system|kextstat.yaml|command|full.yaml, ir_triage.yaml||||kextstat|['macos']||kextstat.txt|||||||||||||
 Display status of dynamic kernel linker.|live_response|system|kldstat.yaml|command|full.yaml, ir_triage.yaml||||kldstat -v|['freebsd']||kldstat_-v.txt|||||||||||||
 Show a listing of last logins and logouts.|live_response|system|last.yaml|command|full.yaml, ir_triage.yaml||||last|['aix', 'freebsd', 'linux', 'macos', 'netbsd', 'solaris']||last.txt|||||||||||||
@@ -640,15 +670,21 @@ Display the latest installed level (technology level, maintenance level and serv
 Display the latest installed level (technology level, maintenance level and service pack) of the system.|live_response|system|oslevel.yaml|command|full.yaml, ir_triage.yaml||||oslevel -r|['aix']||oslevel_-r.txt|||||||||||||
 Display the latest installed level (technology level, maintenance level and service pack) of the system.|live_response|system|oslevel.yaml|command|full.yaml, ir_triage.yaml||||oslevel -s|['aix']||oslevel_-s.txt|||||||||||||
 Display system diagnostic information.|live_response|system|prtdiag.yaml|command|full.yaml, ir_triage.yaml||||prtdiag -v|['solaris']||prtdiag_-v.txt|||||||||||||
+Display Proxmox VE local view of the cluster nodes.|live_response|system|pvecm.yaml|command|full.yaml, ir_triage.yaml||||pvecm nodes|['linux']||pvecm_nodes.txt|||||||||||||
+Display Proxmox VE local view of the cluster status.|live_response|system|pvecm.yaml|command|full.yaml, ir_triage.yaml||||pvecm status|['linux']||pvecm_status.txt|||||||||||||
+Display Proxmox VE subscription information.|live_response|system|pvesubscription.yaml|command|full.yaml, ir_triage.yaml||||pvesubscription get|['linux']||pvesubscription_get.txt|||||||||||||
+Display Proxmox VE user list.|live_response|system|pveum.yaml|command|full.yaml, ir_triage.yaml||||pveum user list|['linux']||pveum_user_list.txt|||||||||||||
+Display Proxmox VE group list.|live_response|system|pveum.yaml|command|full.yaml, ir_triage.yaml||||pveum group list|['linux']||pveum_group_list.txt|||||||||||||
+Display version information for Proxmox VE packages.|live_response|system|pveversion.yaml|command|full.yaml, ir_triage.yaml||||pveversion -v|['linux']||pveversion_-v.txt|||||||||||||
 Display previous and current SysV runlevel.|live_response|system|runlevel.yaml|command|full.yaml, ir_triage.yaml||||runlevel|['linux']||runlevel.txt|||||||||||||
 Display System V services status information.|live_response|system|service.yaml|command|full.yaml, ir_triage.yaml||||service --status-all|['linux']||service_--status-all.txt|||||||||||||
 Display service names and their package names.|live_response|system|service.yaml|command|full.yaml, ir_triage.yaml||||service list|['android']||service_list.txt|||||||||||||
 Display the contexts of files and processes listed in the /etc/sestatus.conf file.|live_response|system|sestatus.yaml|command|full.yaml, ir_triage.yaml||||sestatus -v|['linux']||sestatus_-v.txt|||||||||||||
-Search for files that have SGID bit set.|live_response|system|sgid.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|5.0|sgid.txt||f|||||-2000.0||||||
+Search for files that have SGID bit set.|live_response|system|sgid.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|sgid.txt||f|||||-2000.0||||||
 Display machine and software revision information.|live_response|system|showrev.yaml|command|full.yaml, ir_triage.yaml||||showrev|['solaris']||showrev.txt|||||||||||||
 Display machine and software revision information.|live_response|system|showrev.yaml|command|full.yaml, ir_triage.yaml||||showrev -p|['solaris']||showrev_-p.txt|||||||||||||
-List all socket files.|live_response|system|socket_files.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']||socket_files.txt||s|||||||||||
-Search for files that have SUID bit set.|live_response|system|suid.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|5.0|suid.txt||f|||||-4000.0||||||
+List all socket files.|live_response|system|socket_files.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|socket_files.txt||s|||||||||||
+Search for files that have SUID bit set.|live_response|system|suid.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|suid.txt||f|||||-4000.0||||||
 Display information about service instances as recorded in the service configuration repository.|live_response|system|svcs.yaml|command|full.yaml, ir_triage.yaml||||svcs -a|['solaris']||svcs_-a.txt|||||||||||||
 Display explanations for service states.|live_response|system|svcs.yaml|command|full.yaml, ir_triage.yaml||||svcs -x -v|['solaris']||svcs_-x_-v.txt|||||||||||||
 List the devices making upsystem swap.|live_response|system|swapctl.yaml|command|full.yaml, ir_triage.yaml||||swapctl -l|['freebsd', 'netbsd', 'netscaler', 'openbsd']||swapctl_-l.txt|||||||||||||
@@ -676,17 +712,21 @@ Display virtual memory statistics.|live_response|system|vm_stat.yaml|command|ful
 Display the current run-level of the process.|live_response|system|who.yaml|command|full.yaml, ir_triage.yaml||||who -r|['aix']||who_-r.txt|||||||||||||
 Show failed login attempts.|live_response|system|who.yaml|command|full.yaml, ir_triage.yaml||||who %mount_point%/etc/security/failedlogin|['aix']||who_etc_security_failedlogin.txt|||||||||||||
 Show who is logged on.|live_response|system|who.yaml|command|full.yaml, ir_triage.yaml||||who -T|['all']||who_-T.txt|||||||||||||
-List all world writable directories.|live_response|system|world_writable_directories.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']||world_writable_directories.txt||d|||||777.0||||||
-List all world writable files.|live_response|system|world_writable_files.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']||world_writable_files.txt||f|||||777.0||||||
+List all world writable directories.|live_response|system|world_writable_directories.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|world_writable_directories.txt||d|||||777.0||||||
+List all world writable files.|live_response|system|world_writable_files.yaml|find|full.yaml, ir_triage.yaml|/|['proc', 'procfs']|||['all']|6.0|world_writable_files.txt||f|||||777.0||||||
 Display all installed zones. A zone is an application container that is maintained by the operating system run-time.|live_response|system|zoneadm.yaml|command|full.yaml, ir_triage.yaml||||zoneadm list -i -v|['solaris']||zoneadm_list_-i_-v.txt|||||||||||||
 List networking information for the VM's that have active ports.|live_response|vms|esxcli.yaml|command|full.yaml, ir_triage.yaml||||esxcli network vm list|['esxi']||esxcli_network_vm_list.txt|||||||||||||
 List the virtual machines on this system. This command currently will only list running VMs on the system.|live_response|vms|esxcli.yaml|command|full.yaml, ir_triage.yaml||||esxcli vm process list|['esxi']||esxcli_vm_process_list.txt|||||||||||||
+List all Proxmox VE active and inactive virtual machines.|live_response|vms|qm.yaml|command|full.yaml, ir_triage.yaml||||qm list|['linux']||qm_list.txt|||||||||||||
+Get the current virtual machine configuration.|live_response|vms|qm.yaml|command|full.yaml, ir_triage.yaml||||qm config %line% --current|['linux']||qm_config_%line%_--current.txt|||||||||"qm list | sed -e '1d' | awk '{print $1}'"||||
+List all snapshots.|live_response|vms|qm.yaml|command|full.yaml, ir_triage.yaml||||qm listsnapshot %line%|['linux']||qm_listsnapshot_%line%.txt|||||||||"qm list | sed -e '1d' | awk '{print $1}'"||||
+Show command line which is used to start the VM.|live_response|vms|qm.yaml|command|full.yaml, ir_triage.yaml||||qm showcmd %line%|['linux']||qm_showcmd_%line%.txt|||||||||"qm list | sed -e '1d' | awk '{print $1}'"||||
 Get the list of virtual machines on the host.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/getallvms|['esxi']||vim-cmd_vmsvc_getallvms.txt|||||||||||||
 Retrieves and displays the listsummary status from the vm.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.summary %line%|['esxi']||vim-cmd_vmsvc_get.summary_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
 Retrieves and displays the configuration object for the vm.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.config %line%|['esxi']||vim-cmd_vmsvc_get.config_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
 Retrieves and displays the virtual devices for the vm.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/device.getdevices %line%|['esxi']||vim-cmd_vmsvc_device.getdevices_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
-|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.datastores %line%|['esxi']||vim-cmd_vmsvc_get.datastores_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
-|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.networks %line%|['esxi']||vim-cmd_vmsvc_get.networks_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
+Show the list of datastores for all virtual machines.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.datastores %line%|['esxi']||vim-cmd_vmsvc_get.datastores_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
+Show the list of networks for all virtual machines.|live_response|vms|vim-cmd.yaml|command|full.yaml, ir_triage.yaml||||vim-cmd vmsvc/get.networks %line%|['esxi']||vim-cmd_vmsvc_get.networks_%line%.txt|||||||||"vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'"||||
 List active and inactive domains.|live_response|vms|virsh.yaml|command|full.yaml, ir_triage.yaml||||virsh list --all|['linux']||virsh_list_--all.txt|||||||||||||
 Get a list of interfaces of a running domain along with their IP and MAC addresses.|live_response|vms|virsh.yaml|command|full.yaml, ir_triage.yaml||||virsh domifaddr %line%|['linux']||virsh_domifaddr_%line%.txt|||||||||virsh list --all --name||||
 Returns basic information about the domain.|live_response|vms|virsh.yaml|command|full.yaml, ir_triage.yaml||||virsh dominfo %line%|['linux']||virsh_dominfo_%line%.txt|||||||||virsh list --all --name||||

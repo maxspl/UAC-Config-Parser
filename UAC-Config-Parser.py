@@ -3,9 +3,18 @@ import yaml
 import pandas as pd
 import argparse
 import fnmatch
+import sys
 
 def unknown_constructor(loader, tag_suffix, node):
     return "exclude_" + node.tag[1:]
+
+# Determine OS
+if sys.platform.startswith('win'):
+    current_os = "win"
+    file_separator = "\\"
+elif sys.platform.startswith('linux'):
+    current_os = "lin"
+    file_separator = "/"
 
 parser = argparse.ArgumentParser()
 parser.add_argument('root_path', help='The root path to begin searching for YAML files.')
@@ -36,7 +45,7 @@ for file in os.listdir(profiles_path):
 for root, dirs, files in os.walk(os.path.join(root_path, 'artifacts')):
     for file in files:
         if file.endswith('.yaml'):
-            parts = os.path.relpath(os.path.join(root, file), os.path.join(root_path, 'artifacts')).split('/')
+            parts = os.path.relpath(os.path.join(root, file), os.path.join(root_path, 'artifacts')).split(file_separator)
             category = parts[0]
             subcategories = '/'.join(parts[1:-1]) 
             yaml_name = parts[-1]
@@ -105,4 +114,4 @@ data.replace(';', ',', regex=True, inplace=True)
 data['Profiles'] = data['Profiles'].apply(lambda x: ', '.join(list(set(x.split(', ')))))
 data.to_csv('UAC_artifacts_flatten.csv', index=False,sep="|")
 
-print("\n----------\n\n[INFO] - Parsing succesful. Output : UAC_artifacts_flatten.csv\n"    )
+print("\n----------\n\n[INFO] - Parsing successful. Output : UAC_artifacts_flatten.csv\n"    )
