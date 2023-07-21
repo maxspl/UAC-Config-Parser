@@ -26,8 +26,8 @@ python ..\UAC-Config-Parser.py "C:\Users\maxspl\UAC-Config-Parser\example\uac"
 ![Alt text](/assets/Exec_example.png)
 
 ## Result
-![Alt text](/assets/Result1.png)
-![Alt text](/assets/Result2.png)
+![Alt text](/assets/result1.png)
+![Alt text](/assets/result2.png)
 
 
 A csv file should appear in the current dir.
