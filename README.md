@@ -28,6 +28,7 @@ python ..\UAC-Config-Parser.py "C:\Users\maxspl\UAC-Config-Parser\example\uac"
 ## Result
 
 A csv file should appear in the current dir.
+
 ![Alt text](/assets/result1.png)
 ![Alt text](/assets/result2.png)
 
